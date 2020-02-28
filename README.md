@@ -172,7 +172,7 @@ You see, we no longer need to touch the Jenkins master to setup our configuratio
 Here a quick example of a minimal pipeline to build and deploy the [Spring Boot](https://github.com/cesarvr/java-microservice) project, with added support for [Config Map](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) and [Persistence Volume Claim (PVC)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) (we are going to use this to cache Maven packages):
 
 
-```java
+```groovy
 def appName = "${params.APPLICATION_NAME}"
 def PROXY   = "${params.PROXY}"
 def GIT_URL = "${params.GIT_URL}"
@@ -262,7 +262,6 @@ oc new-build https://github.com/cesarvr/cicd.git --name=service-x --strategy=pip
 
 # Configure the pipeline
 oc set env bc/service-x APPLICATION_NAME=service-xyz /
-  PROXY=vsdbahlprxy1  /
   GIT_URL=https://github.com/cesarvr/Spring-Boot.git
 
 # To start a new build

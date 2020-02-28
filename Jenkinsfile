@@ -1,7 +1,5 @@
 def appName = "${params.APPLICATION_NAME}"
-def PROXY   = "${params.PROXY}"
 def GIT_URL = "${params.GIT_URL}"
-def JVM_OPTIONS = "-DproxySet=true -DproxyHost=${PROXY} -DproxyPort=8080"
 
 /*
   Persistence Volume, the purpose of this object is to cache your Jenkins workspace,
@@ -19,11 +17,16 @@ def CONFIG_MAP = 'my-configmap'
 def CONFIG_MAP_MOUNT = '/cfg'
 
 /*
-  Jenkins Specific Configuration
+  'jnlp'
+
+  By naming this container 'jnlp' we tell Jenkins that this container contains also the Jenkins agent, provided by 
+  this Red Hat image [ registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11 ] 
 */
 
 def POD_LABEL  = 'jnlp'
 def JENKINS_CONTAINER_IMAGE = "registry.redhat.io/openshift3/jenkins-agent-maven-35-rhel7:v3.11"
+
+// This is a small-hack because Jenkins seems to not include the image built-in PATH variable.
 def PATH = "/opt/rh/rh-maven35/root/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 podTemplate(
@@ -32,7 +35,7 @@ podTemplate(
   serviceAccount: 'jenkins',
 
   volumes: [
-    configMapVolume(configMapName: CONFIG_MAP, mountPath: CONFIG_MAP_MOUNT),
+    // Cache this folder with a PVC
     persistentVolumeClaim(claimName: PVC_MAVEN_CACHE, mountPath: "/home/jenkins", readOnly: false)
   ],
 
@@ -41,16 +44,18 @@ podTemplate(
       name: POD_LABEL,
       image: JENKINS_CONTAINER_IMAGE,
       envVars: [envVar(key: 'PATH', value: PATH)] )
-  ]
-  ) {
+  ]) {
 
-    node (BUILD_TAG) {
+    node (BUILD_TAG) 
+    {
+
         container(POD_LABEL) {
 
           stage("Configuring Openshift Components") {
             def BUILD_SCRIPT = "https://raw.githubusercontent.com/cesarvr/Spring-Boot/master/jenkins/build.sh"
-
             git "${GIT_URL}"
+
+            // This script creates Openshift objects to run your service. 
             sh "curl ${BUILD_SCRIPT} -o build.sh && chmod +x ./build.sh && ./build.sh ${appName} "
           }
 
@@ -63,17 +68,16 @@ podTemplate(
             }
           }
 
-           stage('Creating Container'){
+          stage('Creating Container'){
             sh "oc start-build bc/${appName} --from-file=\$(ls target/*.jar) --follow"
-           }
+          }
 
-           stage('Deploy') {
-                script {
-                  sh "oc rollout latest dc/${appName} || true"
-                  sh "oc wait dc/${appName} --for condition=available --timeout=-1s"
-                }
-           }
-
+          stage('Deploy') {
+            script {
+              sh "oc rollout latest dc/${appName} || true"
+              sh "oc wait dc/${appName} --for condition=available --timeout=-1s"
+            }
+          }
         }
-    }
-}
+    } // node
+} // podTemplate
