@@ -61,7 +61,7 @@ podTemplate(
 
           stage('Testing and Packaging') {
             try {
-              sh "mvn ${JVM_OPTIONS} package"
+              sh "mvn package"
             }finally {
               junit 'target/surefire-reports/*.xml'
               archiveArtifacts artifacts: 'target/**.jar', fingerprint: true
