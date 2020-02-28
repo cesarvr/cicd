@@ -262,7 +262,7 @@ podTemplate(
 oc new-build https://github.com/cesarvr/cicd.git --name=service-x --strategy=pipeline
 
 # Configure the pipeline
-oc set env bc/service-x APPLICATION_NAME=service-xyz /
+oc set env bc/service-x APPLICATION_NAME=service-xyz \ 
   GIT_URL=https://github.com/cesarvr/Spring-Boot.git
 
 # To start a new build
