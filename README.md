@@ -5,6 +5,7 @@ Table of contents
    * [Jenkins Worker Customization](#jenkins-worker-customization)
    * [Jenkins DSL](#jenkins-dsl)
    * [What Can We Do With This](#what-can-we-do-with-this)
+   * [Building A Spring Boot Application](#using-this-with-the-spring-boot-project)
    * [Caching Maven Dependencies (Optimization)](#caching-maven-dependencies)
 <!--te-->
 
