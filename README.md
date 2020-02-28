@@ -170,7 +170,7 @@ You see, we no longer need to touch the Jenkins master to setup our configuratio
 
 ### Using This With The Spring Boot Project
 
-Here a quick example of a minimal pipeline to build and deploy the [Spring Boot](https://github.com/cesarvr/java-microservice) project, with added support for [Config Map](https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/) and [Persistence Volume Claim (PVC)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) (we are going to use this to cache Maven packages):
+Here a quick example of a minimal pipeline to build and deploy the [Spring Boot](https://github.com/cesarvr/java-microservice) project, with a [Persistence Volume Claim (PVC)](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) to cache our dependencies:
 
 
 ```groovy
@@ -280,5 +280,5 @@ If you run the script above you will see that it will try to mount the config ma
 Just make sure you use the same name than here:
 
 ```java
-def PVC_MAVEN_CACHE = 'maven-cache'
+  def PVC_MAVEN_CACHE = 'maven-cache'
 ```
