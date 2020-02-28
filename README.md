@@ -271,7 +271,11 @@ oc start-build service-x --follow
 
 ### Caching Maven Dependencies
 
-If you run the script above you will see that it will try to mount the config map and the PVC, but if don't have any of those then you will see that it won't complain. To make sure next time our build is cached we are going to add a PVC, the easiest way is using the menu:
+If you run the script above you without the setting up a PVC you should see this error:
+
+![](https://github.com/cesarvr/cicd/blob/master/img/maven-pvc-failed.png?raw=true)
+
+To fix this you should create a [PVC](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) and name it ``maven-cache``:
 
 ![](https://github.com/cesarvr/cicd/raw/master/img/cicd-simple-1.PNG)
 
