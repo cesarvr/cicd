@@ -2,11 +2,12 @@ Table of contents
 =================
 
 <!--ts-->
-   * [Jenkins Worker Customization](#hello-world)
-   * [Jenkins DSL](#local-development)
-   * [Debugging A Container](#debugging-a-container)
-   * [Zipkin Instrumentation](#zipkin-instrumentation)
+   * [Jenkins Worker Customization](#jenkins-worker-customization)
+   * [Jenkins DSL](#jenkins-dsl)
+   * [What Can We Do With This](#what-can-we-do-with-this)
+   * [Caching Maven Dependencies (Optimization)](#caching-maven-dependencies)
 <!--te-->
+
 
 ## Jenkins Worker Customization
 
